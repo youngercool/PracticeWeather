@@ -1,10 +1,13 @@
 package com.example.younge.coolweather.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.younge.coolweather.db.City;
 import com.example.younge.coolweather.db.County;
 import com.example.younge.coolweather.db.Province;
+import com.example.younge.coolweather.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,5 +89,24 @@ public static boolean handleCountyResponse(String response,int cityId){
             }
         }
         return false;
+    }
+
+    /**
+     * 将返回的JSON数据解析成Weather实体类
+    * */
+    public static Weather handleWeatherResponse(String response){
+
+        Log.e("=======","==========>="+response);
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+
+            return new Gson().fromJson(weatherContent,Weather.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
